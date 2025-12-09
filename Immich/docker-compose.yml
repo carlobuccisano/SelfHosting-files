@@ -21,7 +21,9 @@ services:
       - ${UPLOAD_LOCATION}:/data
       - /etc/localtime:/etc/localtime:ro
       # External library (Real path:Container path:Access)
-      - ${PHOTO_LIBRARY}:/mnt/Foto:ro  
+      - ${PHOTO_LIBRARY}:/mnt/Foto:ro 
+      - ${GENERIC_DUMP}:/mnt/GenericDump:ro
+      - ${PHOTO_OTHERS}:/mnt/PhotoOthers:ro
     env_file:
       - .env
     ports:
