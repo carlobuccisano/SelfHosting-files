@@ -18,6 +18,10 @@ services:
         source: ${MUSIC_PATH}
         target: /media/music
         read_only: true
+      - type: bind
+        source: ${TVSERIES_PATH}
+        target: /media/tvseries
+        read_only: true
     env_file: 
       - .env
     restart: 'unless-stopped' 
