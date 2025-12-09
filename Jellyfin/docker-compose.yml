@@ -1,0 +1,23 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    # My user uid / guid
+    user: ${MY_USER_ID}:${MY_USER_ID}
+    ports:
+      - ${TCP_PORT}:${TCP_PORT}/tcp
+      - ${UDP_PORT}:${UDP_PORT}/udp
+    volumes:
+      - ${CONFIG_PATH}:/config
+      - ${CACHE_PATH}:/cache
+      - type: bind
+        source: ${MOVIES_PATH}
+        target: /media/movies
+        read_only: true
+      - type: bind
+        source: ${MUSIC_PATH}
+        target: /media/music
+        read_only: true
+    env_file: 
+      - .env
+    restart: 'unless-stopped' 
