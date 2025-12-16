@@ -1,0 +1,23 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${DATA_PATH}:/gluetun
+      - type: bind
+        source: ${CONFIG_PATH}/config.toml
+        target: /gluetun/auth/config.toml
+        read_only: true
+    ports:
+      - ${CONTROL_SERVER_PORT}:${CONTROL_SERVER_PORT}/tcp
+      - ${JACKETT_PORT}:${JACKETT_PORT}
+      - ${FLARESOLVERR_PORT}:${FLARESOLVERR_PORT}
+      - ${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}
+  #    - ${QBITTORRENT_TORRENTING_PORT}:${QBITTORRENT_TORRENTING_PORT}/tcp
+  #    - ${QBITTORRENT_TORRENTING_PORT}:${QBITTORRENT_TORRENTING_PORT}/udp
+    env_file:
+      - .env
