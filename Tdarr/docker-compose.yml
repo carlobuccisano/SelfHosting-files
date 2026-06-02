@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     network_mode: bridge
     ports:
-      # Bound to localhost only — expose via reverse proxy (Nginx, Caddy, etc.)
-      # Change to "8265:8265" temporarily if you need direct LAN access during setup
-      - 127.0.0.1:8265:8265   # Web UI
+      - 8265:8265   # Web UI
       - 127.0.0.1:8266:8266   # Server API
+    env_file:
+      - .env
     environment:
       - TZ=${TZ}
       - PUID=${PUID}
@@ -16,7 +16,7 @@ services:
       - UMASK_SET=002
 
       # Server settings
-      - serverIP=${TDARR_SERVER_IP}
+      - serverURL=${TDARR_SERVER_URL}
       - serverPort=8266
       - webUIPort=8265
       - auth=${TDARR_AUTH}
@@ -25,6 +25,7 @@ services:
       # API key — seeded on first start from .env, never hardcoded here
       # Required when auth=true so nodes and tooling can authenticate
       - seededApiKey=${TDARR_API_KEY}
+      - apiKey=${TDARR_API_KEY}           # node: use the key to authenticate
 
       # Internal node
       - internalNode=true
