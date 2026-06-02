@@ -1,0 +1,84 @@
+services:
+  tdarr:
+    container_name: tdarr
+    image: ghcr.io/haveagitgat/tdarr:latest
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      # Bound to localhost only — expose via reverse proxy (Nginx, Caddy, etc.)
+      # Change to "8265:8265" temporarily if you need direct LAN access during setup
+      - 127.0.0.1:8265:8265   # Web UI
+      - 127.0.0.1:8266:8266   # Server API
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - UMASK_SET=002
+
+      # Server settings
+      - serverIP=${TDARR_SERVER_IP}
+      - serverPort=8266
+      - webUIPort=8265
+      - auth=${TDARR_AUTH}
+      - openBrowser=false    # Always off on a headless server
+
+      # API key — seeded on first start from .env, never hardcoded here
+      # Required when auth=true so nodes and tooling can authenticate
+      - seededApiKey=${TDARR_API_KEY}
+
+      # Internal node
+      - internalNode=true
+      - inContainer=true
+      - nodeName=${TDARR_NODE_NAME}
+
+      # FFmpeg version
+      - ffmpegVersion=7
+
+      # Worker counts — tune to your CPU core count
+      # Recommended: leave 1-2 cores free for the OS
+      - transcodecpuWorkers=${TDARR_CPU_WORKERS}
+      - healthcheckcpuWorkers=1
+
+      # GPU workers — set to 0 unless you enable hardware transcoding below
+      - transcodegpuWorkers=0
+      - healthcheckgpuWorkers=0
+
+      # Misc
+      - maxLogSizeMB=10
+      - cronPluginUpdate=
+      - pollInterval=2000
+      - startPaused=false
+
+      # ── Intel iGPU (VA-API) ────────────────────────────────────────────────
+      # Your Intel HD 2000/3000 (Sandy Bridge, i915) supports VA-API for
+      # H.264 decode only. HEVC/H.265 is NOT supported in hardware on this GPU.
+      # To enable: uncomment the 'devices' section below and set
+      # transcodegpuWorkers=1 / healthcheckgpuWorkers=1 above.
+      # ────────────────────────────────────────────────────────────────────────
+
+    volumes:
+      # Tdarr server database, plugins, samples
+      - ${TDARR_DATA}/server:/app/server
+
+      # Node + server config files (Tdarr_Server_Config.json, etc.)
+      - ${TDARR_DATA}/configs:/app/configs
+
+      # Log files
+      - ${TDARR_DATA}/logs:/app/logs
+
+      # Your media library — adjust to your actual path(s)
+      - ${MEDIA_PATH}:/media
+
+      # Transcode scratch space — use fast local storage (SSD preferred)
+      - ${TRANSCODE_CACHE}:/temp
+
+    # ── Uncomment to enable Intel iGPU via VA-API ─────────────────────────────
+    # devices:
+    #   - /dev/dri:/dev/dri
+    # ─────────────────────────────────────────────────────────────────────────
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

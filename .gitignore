@@ -1,5 +1,10 @@
 **/.env
 
+# Local override (optional pattern for per-machine overrides)
+**/.env.local
+**/docker-compose.override.yml
+
+
 Immich/library
 Immich/postgres
 Gluetun/auth
