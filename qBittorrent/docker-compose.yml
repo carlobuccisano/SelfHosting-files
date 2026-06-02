@@ -7,5 +7,6 @@ services:
     volumes:
       - ${QBITTORRENT_CONFIG_PATH}:/config
       - ${QBITTORRENT_DOWNLOAD_PATH}:/downloads
+      - ${QBITTORRENT_SEEDING_PATH}:/seeding
     network_mode: "container:gluetun"
     restart: unless-stopped
