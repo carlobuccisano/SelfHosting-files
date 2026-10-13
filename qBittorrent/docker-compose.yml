@@ -1,3 +1,6 @@
+include:
+  - ../Gluetun/docker-compose.yml
+
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
@@ -10,3 +13,5 @@ services:
       - ${QBITTORRENT_SEEDING_PATH}:/seeding
     network_mode: "container:gluetun"
     restart: unless-stopped
+    depends_on:
+      - gluetun

@@ -3,23 +3,23 @@ services:
     image: jellyfin/jellyfin
     container_name: jellyfin
     # My user uid / guid
-    user: ${MY_USER_ID}:${MY_USER_ID}
+    user: ${JELLYFIN_USER_ID}:${JELLYFIN_USER_ID}
     ports:
-      - ${TCP_PORT}:${TCP_PORT}/tcp
-      - ${UDP_PORT}:${UDP_PORT}/udp
+      - ${JELLYFIN_TCP_PORT}:${JELLYFIN_TCP_PORT}/tcp
+      - ${JELLYFIN_UDP_PORT}:${JELLYFIN_UDP_PORT}/udp
     volumes:
-      - ${CONFIG_PATH}:/config
-      - ${CACHE_PATH}:/cache
+      - ${JELLYFIN_CONFIG_PATH}:/config
+      - ${JELLYFIN_CACHE_PATH}:/cache
       - type: bind
-        source: ${MOVIES_PATH}
+        source: ${JELLYFIN_MOVIES_PATH}
         target: /media/movies
         read_only: true
       - type: bind
-        source: ${MUSIC_PATH}
+        source: ${JELLYFIN_MUSIC_PATH}
         target: /media/music
         read_only: true
       - type: bind
-        source: ${TVSERIES_PATH}
+        source: ${JELLYFIN_TVSERIES_PATH}
         target: /media/tvseries
         read_only: true
     env_file: 

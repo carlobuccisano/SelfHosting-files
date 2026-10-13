@@ -1,6 +1,5 @@
-name: torrent-array
+name: torrent_array
 include:
-  - Gluetun/docker-compose.yml
   - Jackett/docker-compose.yml
   - qBittorrent/docker-compose.yml
 

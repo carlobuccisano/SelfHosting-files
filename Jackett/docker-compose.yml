@@ -1,3 +1,6 @@
+include:
+  - ../Gluetun/docker-compose.yml
+
 services:
   jackett:
     image: lscr.io/linuxserver/jackett:latest
@@ -5,10 +8,12 @@ services:
     env_file:
       - .env
     volumes:
-      - ${CONFIG_PATH}:/config
-      - ${BLACKHOLE_PATH}:/downloads
+      - ${JACKETT_CONFIG_PATH}:/config
+      - ${JACKETT_BLACKHOLE_PATH}:/downloads
     restart: unless-stopped
     network_mode: "container:gluetun"
+    depends_on:
+      - gluetun
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -21,3 +26,5 @@ services:
       - .env
     network_mode: "container:gluetun"
     restart: unless-stopped
+    depends_on:
+      - gluetun

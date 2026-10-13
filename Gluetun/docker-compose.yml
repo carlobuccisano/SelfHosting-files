@@ -7,9 +7,9 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     volumes:
-      - ${DATA_PATH}:/gluetun
+      - ${GLUETUN_DATA_PATH}:/gluetun
       - type: bind
-        source: ${CONFIG_PATH}/config.toml
+        source: ${GLUETUN_CONFIG_PATH}/config.toml
         target: /gluetun/auth/config.toml
         read_only: true
     ports:
